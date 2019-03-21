@@ -15,6 +15,8 @@ rem start npm i webpack --save-dev
 rem start npm i webpack-cli --save-dev
 rem start npm i webpack-dev-server --save-dev
 
-
-
+rem start npm i react
+rem start npm i react-dom
+rem start npm i jquery
+rem start npm i jquery-ui
 

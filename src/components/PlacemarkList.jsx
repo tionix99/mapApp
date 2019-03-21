@@ -2,6 +2,8 @@ if (DEV_MOD) {
 	console.log("PlacemarkList load", Date.now());
 }
 
+import React from "react";
+
 import {
 	mapFitToViewport,// установка карты в размер контейнера
 } from "../api/ymap.js";
@@ -55,6 +57,7 @@ class InputNumber extends React.Component {
 			/* return true; */
 		}
 		
+	
 		return true;
 	}
 
@@ -113,7 +116,7 @@ class CoordPlacemark extends React.Component { // компонент панел�
 		}
 
 		return <ul
-			class= "str"
+			className= "str"
 		>
 			<li>
 				<label>

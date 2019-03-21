@@ -5,7 +5,12 @@
     "dev_serv": "webpack-dev-server --config webpack.dev_map.js --hot --open",
     "build_min": "webpack --config webpack.build_min.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "jquery-ui": "^1.12.1",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",

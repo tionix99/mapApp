@@ -3,6 +3,9 @@ if (DEV_MOD) {
 	console.log("DistanceInfo load", Date.now());
 }
 
+import React from "react";
+
+
 import {
 	mapFitToViewport, // установка карты в размер контейнера
 } from "../api/ymap.js";

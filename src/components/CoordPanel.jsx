@@ -2,6 +2,10 @@ if (DEV_MOD) {
 	console.log("CoordPanel load", Date.now());
 }
 
+import React from "react";
+
+
+
 import {
 	thisMap, // объект карты созданный ymaps.Map
 	mapSetCenterAndZoom, // центрирует и зуммирует карту исходяя из указанного массива координат
@@ -51,13 +55,16 @@ const stepButtons= [ // значения кнопок для выпадающе�
 class DropSelectList extends React.Component { // компонент выпадающего списка 
 	constructor(props) {
 		super(props);
-		this.selectInfo= React.createRef(); // ссылка на элемент отображающий выбранное в выпадающем списке значение
+		this.selectInfo= {
+			el: React.createRef(), // ссылка на элемент отображающий выбранное в выпадающем списке значение
+			defval: ""
+		};
 	}
 
-	shouldComponentUpdate() { } // это не изменемы компонент - обновление ему не нужно
+	shouldComponentUpdate() { return false; } // это неизменяемый компонент - обновление ему не нужно
 
 	componentDidMount() { // значение this.selectInfo.defval устанавливает при своей инициализации ButtonControl, ButtonControl также по клику меняет this.selectInfo.current.textContent
-		this.selectInfo.current.textContent= this.selectInfo.defval;
+		this.selectInfo.el.current.textContent= this.selectInfo.defval;
 	}
 
 	render() {
@@ -70,19 +77,19 @@ class DropSelectList extends React.Component { // компонент выпад�
 		}
 
 		return <li
-			class= "downdrop"
+			className= "downdrop"
 		>
 			<label>
 				&#9660;{this.props.label}:
 			</label>
 			<a 
-				ref= {this.selectInfo} // отображает включенную в выпадающем списк кнопку
+				ref= {this.selectInfo.el} // отображает включенную в выпадающем списк кнопку
 			>
 				...
 			</a>
 
 			<ButtonControl 
-				class= "submenu" // заданный в style.css класс выпадающего списка
+				className= "submenu" // заданный в style.css класс выпадающего списка
 				mode= "select" // при выборе одного значения выбор с других значений снимается 
 
 				status= "set" // при инициализации компонента ButtonControl устанавливает выбранным значение указанное в setting
@@ -438,17 +445,17 @@ class CoordPanel extends React.Component {
 
 		return <div>
 			<ul
-				class= "str"
+				className= "str"
 			>	
 				<li>
 					<button
-						class= {this.autozoomON}
+						className= {this.autozoomON}
 						onClick= {this.evAutozoomClick}
 					>
 						автозум
 					</button>
 					<button
-						class= {this.routeON}
+						className= {this.routeON}
 						onClick= {this.evRouteClick}
 					>
 						маршрут

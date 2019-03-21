@@ -5,11 +5,23 @@ if (DEV_MOD) {
 	console.log("app load", Date.now());
 }
 
+// eslint-disable-next-line no-unused-vars
+import React from "react";
+import ReactDOM from "react-dom";
+
+import JQuery from "jquery"; 
+
+import "jquery-ui/ui/core";
+import "jquery-ui/ui/widgets/resizable";
+
+
+
 import {
 	initMap, // инициализация карты
 	mapFitToViewport // установка карты в размер контейнера
 
 } from "./api/ymap.js";
+
 
 // eslint-disable-next-line no-unused-vars
 import MainPanel from "./components/MainPanel.jsx";
@@ -49,7 +61,7 @@ ymaps.ready(function() {
 			}
 
 			// с помощью JQuery делаем контенер приложения изменяемого размера
-			$(appContainer).resizable({
+			JQuery(appContainer).resizable({
 				minWidth: 240,
 				minHeight: 240,
 
@@ -76,7 +88,7 @@ ymaps.ready(function() {
 			//`
 
 			// но это усложняет компоновку блоков приложения и нарушает его целостность
-			$("#map-container").replaceWith(mapContainer);
+			JQuery("#map-container").replaceWith(mapContainer);
 			mapFitToViewport();
 
 		}

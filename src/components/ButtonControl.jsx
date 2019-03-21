@@ -2,12 +2,14 @@ if (DEV_MOD) {
 	console.log("ButtonControl load", Date.now());
 }
 
+import React from "react";
 
 
 let setClass= { // класс btn помогает определить что клик произошел именно по элементу управления
 	set: function (btn) { // устанавливает включенной кнопку если ее btn.lbl совпадает с this.props.setting
 		if (this.props.setting=== btn.lbl) { 
 			if (this.props.info) { // this.props.info элемент - родительского компонента еще не отрисованный на момент инициализации ButtonControl
+				/* console.log(this.props.info); */
 				this.props.info.defval= btn.label;// если есть this.props.info устанавливает его defval которое будет установлено в textContent родительским компонентом при его отрисовке
 			} // такая система позволяет не запусать рендер родительского компонента для установки значения this.props.info
 			return "btn ON";
@@ -56,7 +58,7 @@ class ButtonControl extends React.Component {
 				}
 
 				if (this.props.info) { //если была передана ссыклка на элемент info из родительского компонента - устанавливает его значение
-					this.props.info.current.textContent= btn.label;
+					this.props.info.el.current.textContent= btn.label;
 				}
 
 				if (this.props.extClick) { // если была передана фукция расширенного поведения - выполняем ее
@@ -66,7 +68,7 @@ class ButtonControl extends React.Component {
 		};
 	}
 
-	shouldComponentUpdate() { }// запрет перерисовки компонента - этот компонент не обновляется при обновлении родителя
+	shouldComponentUpdate() { return false; }// запрет перерисовки компонента - этот компонент не обновляется при обновлении родителя
 		
 	
 	render() {
@@ -76,7 +78,7 @@ class ButtonControl extends React.Component {
 		}
 	
 		return <ul
-			class= {this.props.class} 
+			className= {this.props.className} 
 			onClick= {this.onClick}
 		>
 			{this.props.buttons.map((btn, i)=> {
@@ -84,7 +86,7 @@ class ButtonControl extends React.Component {
 				return <li 
 					key= {i} 
 					value= {i} 
-					class= {this.btnClass(btn)}
+					className= {this.btnClass(btn)}
 					title= {btn.title}
 
 				>

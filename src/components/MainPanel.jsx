@@ -4,7 +4,9 @@ if (DEV_MOD) {
 }
 
 // eslint-disable-next-line no-unused-vars
-import CoordPanel from "./CoordPanel.jsx";
+import React from "react";
+// eslint-disable-next-line no-unused-vars
+import CoordPanel from "./CoordPanel.jsx"; 
 
 
 
