@@ -54,7 +54,7 @@ class DropSelectList extends React.Component { // компонент выпад�
 		this.selectInfo= React.createRef(); // ссылка на элемент отображающий выбранное в выпадающем списке значение
 	}
 
-	shouldComponentUpdate() { } // это не изменемы компонент - обновление ему не нужно
+	shouldComponentUpdate() { } // это не изменяемый компонент - обновление ему не нужно
 
 	componentDidMount() { // значение this.selectInfo.defval устанавливает при своей инициализации ButtonControl, ButtonControl также по клику меняет this.selectInfo.current.textContent
 		this.selectInfo.current.textContent= this.selectInfo.defval;
