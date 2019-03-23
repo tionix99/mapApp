@@ -1,1 +1,1 @@
-start npm run dev_serv
+start npm run start

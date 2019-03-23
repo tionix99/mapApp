@@ -1,10 +1,6 @@
-if (DEV_MOD) {
-	console.log("CoordPanel load", Date.now());
-}
+import "./CoordPanel.css";
 
-import React from "react";
-
-
+import React, { Component } from "react";
 
 import {
 	thisMap, // объект карты созданный ymaps.Map
@@ -32,7 +28,9 @@ import PlacemarkList from "./PlacemarkList.jsx"; // список указанн�
 // eslint-disable-next-line no-unused-vars
 import DistanceInfo from "./DistanceInfo.jsx"; // отображения рассчитанных расстояний
 
-
+if (process.env.NODE_ENV=== "development") {
+	console.log("CoordPanel load", Date.now());
+}
 
 
 const formatButtons= [ // значения кнопок для выпадающего списка "формат"
@@ -52,7 +50,7 @@ const stepButtons= [ // значения кнопок для выпадающе�
 
 
 // eslint-disable-next-line no-unused-vars
-class DropSelectList extends React.Component { // компонент выпадающего списка 
+class DropSelectList extends Component { // компонент выпадающего списка 
 	constructor(props) {
 		super(props);
 		this.selectInfo= {
@@ -68,7 +66,7 @@ class DropSelectList extends React.Component { // компонент выпад�
 	}
 
 	render() {
-		if (DEV_MOD) {
+		if (process.env.NODE_ENV=== "development") {
 			console.log (
 				"DropSelectList render", 
 				this.props.label,
@@ -82,7 +80,11 @@ class DropSelectList extends React.Component { // компонент выпад�
 			<label>
 				&#9660;{this.props.label}:
 			</label>
+		
+
+			{/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
 			<a 
+				
 				ref= {this.selectInfo.el} // отображает включенную в выпадающем списк кнопку
 			>
 				...
@@ -279,7 +281,7 @@ class CoordPanel extends React.Component {
 		};
 
 		this.evClickFormat= (btn)=> { // клик по выпадающему списку "формат"
-			if (DEV_MOD) {
+			if (process.env.NODE_ENV=== "development") {
 				console.log (
 					"!!! evClickFormat", 
 					Date.now()
@@ -298,7 +300,7 @@ class CoordPanel extends React.Component {
 		};
 
 		this.evClickStep= (btn)=> { // клик по выпадающему списку "шаг"
-			if (DEV_MOD) {
+			if (process.env.NODE_ENV=== "development") {
 				console.log (
 					"!!! evClickStep", 
 					Date.now()
@@ -311,7 +313,7 @@ class CoordPanel extends React.Component {
 
 		this.evCreatePlacemark= (e)=> { // событие создания метки на карте
 
-			if (DEV_MOD) {
+			if (process.env.NODE_ENV=== "development") {
 				console.log (
 					"!!! evCreatePlacemark", 
 					Date.now()
@@ -346,7 +348,7 @@ class CoordPanel extends React.Component {
 				
 	
 				placemark.geoObj.events.add("dragend", ()=> {// событие окончание переноса метки (пересчет координат)
-					if (DEV_MOD) {
+					if (process.env.NODE_ENV=== "development") {
 						console.log (
 							"!!! evDragEndPlacemark", 
 							Date.now()
@@ -374,7 +376,7 @@ class CoordPanel extends React.Component {
 		};
 
 		this.evDeletePlacemark= (placemark)=> { // событие удаления метки с карты
-			if (DEV_MOD) {
+			if (process.env.NODE_ENV=== "development") {
 				console.log (
 					"!!! evDeletePlacemark", 
 					Date.now()
@@ -389,7 +391,7 @@ class CoordPanel extends React.Component {
 		};
 
 		this.evInputCoords= (placemark)=> { // событие ввода координат в окне метки PlacemarkList
-			if (DEV_MOD) {
+			if (process.env.NODE_ENV=== "development") {
 				console.log (
 					"!!! evInputCoords", 
 					Date.now()
@@ -435,7 +437,7 @@ class CoordPanel extends React.Component {
 	}
 
 	render() {
-		if (DEV_MOD) {
+		if (process.env.NODE_ENV=== "development") {
 			console.log (
 				"CoordPanel render", 
 

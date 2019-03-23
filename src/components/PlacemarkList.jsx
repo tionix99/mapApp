@@ -1,19 +1,18 @@
-if (DEV_MOD) {
-	console.log("PlacemarkList load", Date.now());
-}
+import React, { Component } from "react";
 
-import React from "react";
 
 import {
 	mapFitToViewport,// установка карты в размер контейнера
 } from "../api/ymap.js";
 
 
+if (process.env.NODE_ENV=== "development") {
+	console.log("PlacemarkList load", Date.now());
+}
 
 
 
-// eslint-disable-next-line no-unused-vars
-class InputNumber extends React.Component { 
+class InputNumber extends Component { 
 	constructor(props) {
 		super(props);
 
@@ -64,7 +63,7 @@ class InputNumber extends React.Component {
 
 
 	render() {
-		/* if (DEV_MOD) {
+		/* if (process.env.NODE_ENV=== "development") {
 			console.log (
 				"InputNumber render", 
 				this.props.path[this.props.index],
@@ -94,9 +93,7 @@ class InputNumber extends React.Component {
 
 
 
-
-// eslint-disable-next-line no-unused-vars
-class CoordPlacemark extends React.Component { // компонент панели ввода координат
+class CoordPlacemark extends Component { // компонент панели ввода координат
 	constructor(props) {
 		super(props);
 		
@@ -107,7 +104,7 @@ class CoordPlacemark extends React.Component { // компонент панел�
 
 
 	render() {
-		if (DEV_MOD) {
+		if (process.env.NODE_ENV=== "development") {
 			console.log (
 				"CoordPlacemark render", 
 				this.props.placemark.name,
@@ -207,7 +204,7 @@ class CoordPlacemark extends React.Component { // компонент панел�
 
 
 
-class PlacemarkList extends React.Component { // компонент генерации списка координат меток
+class PlacemarkList extends Component { // компонент генерации списка координат меток
 	constructor(props) {
 		super(props);
 		this.inputs= 0;
@@ -236,7 +233,7 @@ class PlacemarkList extends React.Component { // компонент генера
 		// после перерисовки компонента если число отображаемых меток изменилось то обновляем размер карты чтобы она помещалась в окно приложения
 		if (this.inputs!== Object.keys(this.props.placemarkStore).length) { // если изменилось количество отображаемых строк - подгоняем карту
 			// eslint-disable-next-line no-undef
-			if (DEV_MOD) {
+			if (process.env.NODE_ENV=== "development") {
 				console.log("PlacemarkList update", Date.now());
 			}
 			
@@ -248,7 +245,7 @@ class PlacemarkList extends React.Component { // компонент генера
 	}
 
 	render() {
-		if (DEV_MOD) {
+		if (process.env.NODE_ENV=== "development") {
 			console.log (
 				"PlacemarkList render", 
 				/* this.props.placemark.label, */

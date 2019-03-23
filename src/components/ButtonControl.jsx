@@ -1,9 +1,8 @@
-if (DEV_MOD) {
+import React, { Component } from "react";
+
+if (process.env.NODE_ENV=== "development") {
 	console.log("ButtonControl load", Date.now());
 }
-
-import React from "react";
-
 
 let setClass= { // класс btn помогает определить что клик произошел именно по элементу управления
 	set: function (btn) { // устанавливает включенной кнопку если ее btn.lbl совпадает с this.props.setting
@@ -27,14 +26,14 @@ let setClass= { // класс btn помогает определить что �
 
 
 
-class ButtonControl extends React.Component {
+class ButtonControl extends Component {
 	constructor(props) {
 		super(props);
 		
 		this.btnClass= setClass[props.status];
 
 		this.onClick= (e)=> { // базовое поведение ButtonControl при клике
-			/* if (DEV_MOD) {
+			/* if (process.env.NODE_ENV=== "development") {
 				console.log ("!!!-ButtonControl click", Date.now());
 				
 			} */
@@ -72,7 +71,7 @@ class ButtonControl extends React.Component {
 		
 	
 	render() {
-		if (DEV_MOD) {
+		if (process.env.NODE_ENV=== "development") {
 			console.log ("ButtonControl_render", Date.now());
 
 		}

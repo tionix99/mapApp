@@ -10,7 +10,7 @@ var appContainer;
 */
 
 function initMap(mapEl, appEl) {
-	if (DEV_MOD) {
+	if (process.env.NODE_ENV=== "development") {
 		console.log ("*** initMap", Date.now());
 	}
 
@@ -20,6 +20,7 @@ function initMap(mapEl, appEl) {
 	// https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/map-docpage/
 	
 	
+	// eslint-disable-next-line no-undef
 	thisMap= new ymaps.Map(mapContainer, {
 		// Координаты центра карты.
 		// Порядок по умолчнию: «широта, долгота».
@@ -69,7 +70,7 @@ function mapSetCenter(coords, zoom) { // центрирует карту
 } */
 
 function mapFitToViewport() { // изменяет размер контейнера карты и саму карту в соответсвии с рамерами других элементов
-	if (DEV_MOD) {
+	if (process.env.NODE_ENV=== "development") {
 		console.log ("*** mapFitToViewport", Date.now());
 	}
 	mapContainer.style.height= (appContainer.clientHeight- mapContainer.offsetTop) + "px";
@@ -80,7 +81,7 @@ function mapFitToViewport() { // изменяет размер контейне�
 function mapSetCenterAndZoom(points, condition) { // центрирует и зуммирует карту по нескольким точкам
 	
 	if (condition) {
-		if (DEV_MOD) {
+		if (process.env.NODE_ENV=== "development") {
 			console.log ("*** mapSetCenterAndZoom", Date.now());
 		}
 		
@@ -121,6 +122,7 @@ function mapSetCenterAndZoom(points, condition) { // центрирует и з�
 
 		}
 		
+		// eslint-disable-next-line no-undef
 		let result= ymaps.util.bounds.getCenterAndZoom(points, thisMap.container.getSize());
 		
 		/* mapSetZoom(result.zoom); */
@@ -133,10 +135,11 @@ function mapSetCenterAndZoom(points, condition) { // центрирует и з�
 
 
 function addPlacemark(name, coords) { // добавление метки на карту
-	if (DEV_MOD) {
+	if (process.env.NODE_ENV=== "development") {
 		console.log ("*** addPlacemark", Date.now());
 	}
 
+	// eslint-disable-next-line no-undef
 	let placemark= new ymaps.Placemark(coords, {
 		// Хинт показывается при наведении мышкой на иконку метки.
 		iconContent: name,
@@ -152,6 +155,7 @@ function addPlacemark(name, coords) { // добавление метки на к
 }
 
 function addPolyline(points) {
+	// eslint-disable-next-line no-undef
 	let polyline= new ymaps.Polyline(points, {}, {});
 	thisMap.geoObjects.add(polyline);
 	/* polyline.editor.startEditing(); // возможность добавления точек*/
@@ -161,7 +165,7 @@ function addPolyline(points) {
 
 
 function movePlacemark(geoObj, coords) { // преремещение геообъекта на указанные координаты
-	/* if (DEV_MOD) {
+	/* if (process.env.NODE_ENV=== "development") {
 		console.log ("*** movePlacemark", Date.now());
 	} */
 
@@ -170,6 +174,7 @@ function movePlacemark(geoObj, coords) { // преремещение геооб�
 }
 
 function getDistance(coords1, coords2) { // получение минимальной дистанции между двумя точками
+	// eslint-disable-next-line no-undef
 	return ymaps.coordSystem.geo.getDistance(coords1, coords2);
 }
 
@@ -190,11 +195,12 @@ function getMultiRouteDistance(multiRoute) { // получения дистан�
 
 function addMultiRoute(points) { // добавление маршрута
 
-	if (DEV_MOD) {
+	if (process.env.NODE_ENV=== "development") {
 		console.log ("*** addMultiRoute", Date.now());
 	}
 		
 
+	// eslint-disable-next-line no-undef
 	let multiRoute= new ymaps.multiRouter.MultiRoute({
 		/* referencePoints: ["Москва", "Тверь"] */
 		/* referencePoints: [[55,65, 37,55], [56.90, 35,68]] */
@@ -217,7 +223,7 @@ function addMultiRoute(points) { // добавление маршрута
 
 
 function removeGeoObject(geoObj) {
-	if (DEV_MOD) {
+	if (process.env.NODE_ENV=== "development") {
 		console.log ("*** removeGeoObject", Date.now());
 	}
 

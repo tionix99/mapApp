@@ -1,1 +1,1 @@
-start npm run build_min
+start npm run build

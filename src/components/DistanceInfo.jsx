@@ -1,17 +1,17 @@
 
-if (DEV_MOD) {
-	console.log("DistanceInfo load", Date.now());
-}
-
-import React from "react";
-
+import React, { Component } from "react";
 
 import {
 	mapFitToViewport, // установка карты в размер контейнера
 } from "../api/ymap.js";
 
+if (process.env.NODE_ENV=== "development") {
+	console.log("DistanceInfo load", Date.now());
+}
 
-class DistanceInfo extends React.Component { // компонент отображающий информацию о дистанциях
+
+
+class DistanceInfo extends Component { // компонент отображающий информацию о дистанциях
 	constructor(props) {
 		super(props);
 		
@@ -40,7 +40,7 @@ class DistanceInfo extends React.Component { // компонент отобра�
 	componentDidUpdate() {
 		if (this.routes!== this.props.multiDistance.length) { // если изменилось количество отображаемых строк - подгоняем карту
 			// eslint-disable-next-line no-undef
-			if (DEV_MOD) {
+			if (process.env.NODE_ENV=== "development") {
 				console.log("DistanceInfo update", Date.now());
 			}
 			
@@ -50,7 +50,7 @@ class DistanceInfo extends React.Component { // компонент отобра�
 	}
 
 	render() {
-		if (DEV_MOD) {
+		if (process.env.NODE_ENV=== "development") {
 			console.log (
 				"DistanceInfo render", 
 				/* this.props.placemark.label, */
