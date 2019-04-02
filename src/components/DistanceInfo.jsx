@@ -1,30 +1,30 @@
 
-import React, { Component } from "react";
+if (DEV_MOD) {
+	console.log("DistanceInfo load", Date.now());
+}
+
+import React from "react";
+import { connect } from "react-redux";
 
 import {
 	mapFitToViewport, // установка карты в размер контейнера
 } from "../api/ymap.js";
 
-if (process.env.NODE_ENV=== "development") {
-	console.log("DistanceInfo load", Date.now());
-}
 
-
-
-class DistanceInfo extends Component { // компонент отображающий информацию о дистанциях
+class DistanceInfo extends React.Component { // компонент отображающий информацию о дистанциях
 	constructor(props) {
 		super(props);
 		
-		this.routes= 0;
+		this.strings= 0;
 
-		this.renderFunc= (multiDistance)=> {
-			if (multiDistance.length=== 0) {
+		this.renderFunc= (multiRoute)=> {
+			if (multiRoute.length=== 0) {
 				return <li>
 					Маршрут не найден
 				</li>;
 
 			} else {
-				return multiDistance.map((distance, i)=> {
+				return multiRoute.map((distance, i)=> {
 					return <li 
 						key= {i} 
 					>
@@ -38,19 +38,19 @@ class DistanceInfo extends Component { // компонент отображаю�
 	
 
 	componentDidUpdate() {
-		if (this.routes!== this.props.multiDistance.length) { // если изменилось количество отображаемых строк - подгоняем карту
+		if (this.strings!== this.props.multiRoute.length) { // если изменилось количество отображаемых строк - подгоняем карту
 			// eslint-disable-next-line no-undef
-			if (process.env.NODE_ENV=== "development") {
+			if (DEV_MOD) {
 				console.log("DistanceInfo update", Date.now());
 			}
 			
 			mapFitToViewport();
-			this.routes= this.props.multiDistance.length;
+			this.strings= this.props.multiRoute.length;
 		}
 	}
 
 	render() {
-		if (process.env.NODE_ENV=== "development") {
+		if (DEV_MOD) {
 			console.log (
 				"DistanceInfo render", 
 				/* this.props.placemark.label, */
@@ -60,22 +60,23 @@ class DistanceInfo extends Component { // компонент отображаю�
 
 		return <ul>
 			<li>
-				Минимальное расстояние: {this.props.shortDistance} км.
+				Минимальное расстояние: {this.props.polylineRoute} км.
 			</li>
 			
 			{
-				this.renderFunc(this.props.multiDistance)
+				this.renderFunc(this.props.multiRoute)
 			}
 			
 		</ul>;
 	}
 }
 
-	
 
 
+export default connect(
+	function(state) {
+		return Object.assign({}, state.get("distanceInfo"));
+	},
+	false
+)(DistanceInfo);
 
-
-
-
-export default DistanceInfo;

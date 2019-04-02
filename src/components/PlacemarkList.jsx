@@ -1,18 +1,37 @@
-import React, { Component } from "react";
+if (DEV_MOD) {
+	console.log("PlacemarkList load", Date.now());
+}
 
+import React from "react";
+
+import { connect } from "react-redux";
+import actions from "../data/actions.js";
 
 import {
 	mapFitToViewport,// установка карты в размер контейнера
 } from "../api/ymap.js";
 
 
-if (process.env.NODE_ENV=== "development") {
-	console.log("PlacemarkList load", Date.now());
-}
+
+const formatSet= {
+	gr_dec: {
+		units: [".", "°"], // отображаемые символы выбранных единиц измеренияя формата
+
+		min2: 0, // минимальное и максимальное значение дляя второго окна ввода координат  при указанном формате
+		max2: 99,
+	},
+
+	gr_min: {
+		units: ["°", "'"],
+		
+		min2: 0,
+		max2: 59,
+	}
+};
 
 
-
-class InputNumber extends Component { 
+// eslint-disable-next-line no-unused-vars
+class InputNumber extends React.Component { 
 	constructor(props) {
 		super(props);
 
@@ -33,9 +52,8 @@ class InputNumber extends Component {
 
 		this.onMouseUp= ()=> { // событие окончания изменения значения
 			this.props.path[this.props.index]= this.state.val; // установка значения val в переданный объект/массив
-			this.props.evInputCoords();
+			this.props.inputCoords();
 		};
-
 
 		this.state.val= this.props.path[this.props.index]; // установка первичных значений
 		this.value= this.props.path[this.props.index]; 
@@ -56,14 +74,11 @@ class InputNumber extends Component {
 			/* return true; */
 		}
 		
-	
 		return true;
 	}
 
-
-
 	render() {
-		/* if (process.env.NODE_ENV=== "development") {
+		/* if (DEV_MOD) {
 			console.log (
 				"InputNumber render", 
 				this.props.path[this.props.index],
@@ -91,20 +106,36 @@ class InputNumber extends Component {
 
 
 
-
-
-class CoordPlacemark extends Component { // компонент панели ввода координат
+// eslint-disable-next-line no-unused-vars
+class CoordPlacemark extends React.Component { // компонент панели ввода координат
 	constructor(props) {
 		super(props);
 		
-		this.evInputCoords= this.props.evInputCoords.bind(false, this.props.placemark); // привязываем к событию объект placemark
-		this.evDeletePlacemark= this.props.evDeletePlacemark.bind(false, this.props.placemark);
+		this.inputCoords= this.props.inputCoords.bind(false, this.props.placemark); // привязываем к событию объект placemark
+		
+		this.centerPlacemark= this.props.centerPlacemark.bind(false, this.props.placemark);
+		this.deletePlacemark= this.props.deletePlacemark.bind(false, this.props.placemark);
 
 	}
 
+	shouldComponentUpdate(nextProps) { 
+		if (this.props.placemark!== nextProps.placemark) { // обновлется при изменении placemark
+			return true;
+		}
+
+		/* if (this.props.formatSet!== nextProps.formatSet) { // при изменении формата всегда изменяется placemark => проверка избыточна
+			return true;
+		} */
+
+		if (this.props.step!== nextProps.step) { // при изменении шага 
+			return true;
+		}
+
+		return false;
+	}
 
 	render() {
-		if (process.env.NODE_ENV=== "development") {
+		if (DEV_MOD) {
 			console.log (
 				"CoordPlacemark render", 
 				this.props.placemark.name,
@@ -131,11 +162,10 @@ class CoordPlacemark extends Component { // компонент панели вв
 					max= {89}
 					step= {this.props.step}
 
-					
 					path= {this.props.placemark.latitude}
 					index= {0}
 					
-					evInputCoords= {this.evInputCoords}
+					inputCoords= {this.inputCoords}
 				/>
 
 				{this.props.formatSet.units[0]}
@@ -149,7 +179,7 @@ class CoordPlacemark extends Component { // компонент панели вв
 					path= {this.props.placemark.latitude}
 					index= {1}
 					
-					evInputCoords= {this.evInputCoords}
+					inputCoords= {this.inputCoords}
 				/> 
 
 				{this.props.formatSet.units[1]}
@@ -170,7 +200,7 @@ class CoordPlacemark extends Component { // компонент панели вв
 					path= {this.props.placemark.longitude}
 					index= {0}
 
-					evInputCoords= {this.evInputCoords}
+					inputCoords= {this.inputCoords}
 				/> 
 
 				{this.props.formatSet.units[0]}
@@ -183,12 +213,17 @@ class CoordPlacemark extends Component { // компонент панели вв
 					path= {this.props.placemark.longitude}
 					index= {1}
 					
-					evInputCoords= {this.evInputCoords}
+					inputCoords= {this.inputCoords}
 				/>
 
 				{this.props.formatSet.units[1]}
 				<button
-					onClick= {this.evDeletePlacemark}
+					onClick= {this.centerPlacemark}
+				>
+					C
+				</button>
+				<button
+					onClick= {this.deletePlacemark}
 				>
 					X
 				</button>
@@ -202,53 +237,59 @@ class CoordPlacemark extends Component { // компонент панели вв
 
 
 
-
-
-class PlacemarkList extends Component { // компонент генерации списка координат меток
+class PlacemarkList extends React.Component { // компонент генерации списка координат меток
 	constructor(props) {
 		super(props);
-		this.inputs= 0;
+		this.strings= 0;
 
 		this.renderFunc= (placemarkStore)=> {
-			let list= [];
+			this.list= [];
+			this.formatSet= formatSet[this.props.format];
+
 			for (var key in placemarkStore) { // проходим по объекту placemarkStore генерируя компоненты CoordPlacemark по его свойствам
-				list.push(
+				this.list.push(
+					
 					<CoordPlacemark 
 						key= {key}
 						
 						placemark= {placemarkStore[key]}
-						formatSet= {this.props.formatSet}
+						
+						formatSet= {this.formatSet}
 						step= {this.props.step}
 
-						evInputCoords= {this.props.evInputCoords}
-						evDeletePlacemark= {this.props.evDeletePlacemark}
+						centerPlacemark= {this.props.centerPlacemark}
+						deletePlacemark= {this.props.deletePlacemark}
+						
+						inputCoords= {this.props.inputCoords}
+
+						
 					/>
 				);
 			}
-			return list;
+			return this.list;
 		};
 	}
 
 	componentDidUpdate() {
 		// после перерисовки компонента если число отображаемых меток изменилось то обновляем размер карты чтобы она помещалась в окно приложения
-		if (this.inputs!== Object.keys(this.props.placemarkStore).length) { // если изменилось количество отображаемых строк - подгоняем карту
+		if (this.strings!== Object.keys(this.props.placemarkStore).length) { // если изменилось количество отображаемых строк - подгоняем карту
 			// eslint-disable-next-line no-undef
-			if (process.env.NODE_ENV=== "development") {
+			if (DEV_MOD) {
 				console.log("PlacemarkList update", Date.now());
 			}
 			
 			mapFitToViewport();
-			this.inputs= Object.keys(this.props.placemarkStore).length;
+			this.strings= Object.keys(this.props.placemarkStore).length;
 		}
 		
 		
 	}
 
 	render() {
-		if (process.env.NODE_ENV=== "development") {
+		if (DEV_MOD) {
 			console.log (
 				"PlacemarkList render", 
-				/* this.props.placemark.label, */
+				/* this.props, */
 				Date.now()
 			);
 		}
@@ -262,11 +303,23 @@ class PlacemarkList extends Component { // компонент генерации
 	}
 }
 
-	
 
 
+const PlacemarkListActions= {
+	inputCoords: actions.inputCoords,
+
+	centerPlacemark: actions.centerPlacemark,
+	deletePlacemark: actions.deletePlacemark
+};
 
 
+// eslint-disable-next-line no-unused-vars
+export default connect(
+	function(state) {
+		return { // данном случае мы просто устанавливаем, что значение this.props.placemarkStore в компоненте MainPanel будет соответствовать placemarkStore из хранилища
+			placemarkStore: state.get("placemarkStore"),
+		};
+	},
+	PlacemarkListActions //  набор действий, которые вызываются в компоненте MainPanel или в его дочерних компонентах. И опять же эти действия после этого мы сможем получить в компоненте MainPanel через значения this.props
+)(PlacemarkList);
 
-
-export default PlacemarkList;

@@ -1,11 +1,23 @@
-import "./jquery-ui.min.css";
-import "./index.css";
+// переменная DEV_MOD вводится webpack, в webpack.dev_map она true, в webpack.build_min - false,
+// таким образом при минификации  сообщения console.log в условии DEV_MOD  вырезаются
 
-/* eslint-disable no-undef */
+import "./jquery-ui.min.css";
+import "./app.css";
+
+
+
+if (DEV_MOD) {
+	console.log("app load", Date.now());
+}
+
+// eslint-disable-next-line no-unused-vars
 import React from "react";
+
+/* const ReactDOM= require("react-dom"); */
+
 import ReactDOM from "react-dom";
 
-/* import * as serviceWorker from "./serviceWorker"; */
+
 
 import JQuery from "jquery"; 
 
@@ -13,15 +25,21 @@ import "jquery-ui/ui/core";
 import "jquery-ui/ui/widgets/resizable";
 
 
+
 import {
 	initMap, // инициализация карты
 	mapFitToViewport // установка карты в размер контейнера
-
 } from "./api/ymap.js";
 
 
 // eslint-disable-next-line no-unused-vars
 import MainPanel from "./components/MainPanel.jsx";
+
+// eslint-disable-next-line no-unused-vars
+import { Provider } from "react-redux";
+
+/* import AppProvider from "./AppProvider.jsx"; */
+import { CREATE_STORE } from "./data/storeOperations.js";
 
 let appContainer= document.getElementById("app-container");
 let mapContainer= document.createElement("div"); // карту можно прикрепить и к элементу не прописанному в DOM, 
@@ -34,18 +52,28 @@ mapContainer.id= "map-conteiner";
 // готовы ли компоненты для использования.
 
 // Функция ymaps.ready исполняет включенный в нее код после того, как будет загружены компоненты API и DOM-дерево документа.
-// Так как компоненты React используют API ymaps то MainWindow загружается по событию ymaps.ready
+// Так как компоненты React используют API ymaps то MainPanel загружается по событию ymaps.ready
 
 
 ymaps.ready(function() {
 	// создаем карту и прикреплем ее к mapContainer
 	initMap(mapContainer, appContainer);
+	// запускаем redux хранилище
+	let store= CREATE_STORE(); 
 
+	// Чтобы связать хранилище и компонент, применяется провайдер - класс Provider из пакета "react-redux".
+	//  У провайдера устанавливается объект хранилища через свойство store: <Provider store={store}>. 
 	ReactDOM.render(
 		<div
 			id= "main-window"
 		>
-			<MainPanel />
+			<Provider 
+				store= {store}
+			>
+				<MainPanel />
+				
+			</Provider>
+
 			<div id= "map-container"></div>
 
 		</div>,
@@ -53,7 +81,7 @@ ymaps.ready(function() {
 		appContainer,
 		
 		function() {
-			if (process.env.NODE_ENV=== "development") {
+			if (DEV_MOD) {
 				console.log ("MainPanel mount", Date.now());
 			}
 
@@ -76,7 +104,7 @@ ymaps.ready(function() {
 			// что дает компонентам использовать api карты в своих конструкторах (т.е. до того как будет отрисован элемент "main-window")
 
 			// можно было бы просто вывести "map-container" из рендера React например так:
-			// но это усложняет компоновку блоков приложения и нарушает его целостность
+		
 			// appContainer.innerHTML= `
 			//	<div id= "main-window">
 			//		<div id= "react-container"></div>
@@ -84,7 +112,7 @@ ymaps.ready(function() {
 			//	</div>
 			//`
 
-			
+			// но это усложняет компоновку блоков приложения и нарушает его целостность
 			JQuery("#map-container").replaceWith(mapContainer);
 			mapFitToViewport();
 
@@ -93,7 +121,7 @@ ymaps.ready(function() {
 }); 
 
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-/* serviceWorker.unregister(); */
+
+
+
+
